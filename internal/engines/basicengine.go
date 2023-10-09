@@ -2,7 +2,9 @@ package engines
 
 import (
 	"fmt"
+	"log"
 	"strings"
+	"time"
 
 	rules "github.com/slf-aobrien/hackday2023rules/internal"
 )
@@ -26,6 +28,9 @@ type Coverage struct {
 }
 
 func ValidateWithCode(user rules.Users) rules.Message {
+	defer duration(track("ValidateWithCode"))
+	defer elapsed("My Function")()
+	overallStart := time.Now()
 	message := rules.Message{}
 	validUser := validateUserData(user)
 	if !validUser {
@@ -42,7 +47,6 @@ func ValidateWithCode(user rules.Users) rules.Message {
 		message.Extra = "No Code Validation was Performed"
 		return message
 	}
-
 	dentalCoverage := Coverage{}
 	lifeCoverage := Coverage{}
 	ltdCoverage := Coverage{}
@@ -120,8 +124,20 @@ func ValidateWithCode(user rules.Users) rules.Message {
 	message.Code = "Success"
 	message.Message = strings.TrimRight(aMessage, " ")
 	message.Extra = "Total Cost: " + fmt.Sprintf("%.2f", totalFee)
+	duration := time.Since(overallStart)
+	fmt.Println("Start:   ", overallStart.UnixNano())
+	fmt.Printf("elapsed: %v\n", time.Since(overallStart))
+
+	message.ElapsedTime = fmt.Sprintf("%v", duration.String())
 
 	return message
+}
+
+func elapsed(name string) func() {
+	start := time.Now()
+	return func() {
+		fmt.Printf("%s took %v\n", name, time.Since(start))
+	}
 }
 
 func calculateFee(user rules.Users, coverage Coverage) float64 {
@@ -189,4 +205,11 @@ func validateUserData(user rules.Users) bool {
 		return false
 	}
 	return true
+}
+func track(msg string) (string, time.Time) {
+	return msg, time.Now()
+}
+
+func duration(msg string, start time.Time) {
+	log.Printf("%v: %v\n", msg, time.Since(start))
 }
