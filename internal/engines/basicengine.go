@@ -47,10 +47,49 @@ func ValidateWithCode(user rules.Users) rules.Message {
 		message.Extra = "No Code Validation was Performed"
 		return message
 	}
-	dentalCoverage := Coverage{}
-	lifeCoverage := Coverage{}
-	ltdCoverage := Coverage{}
+	dentalCoverage := buildDentalCoverage()
+	lifeCoverage := buildLifeCoverage()
+	ltdCoverage := buildLtdCoverage()
 
+	dentalFee := 0.0
+	lifeFee := 0.0
+	ltdFee := 0.0
+	totalFee := 0.0
+	aMessage := ""
+
+	if user.HasDental {
+		dentalFee = calculateFee(user, dentalCoverage)
+		strFee := fmt.Sprintf("%.2f", dentalFee)
+		aMessage = aMessage + "Dental Cost: " + strFee + ", "
+		totalFee = totalFee + dentalFee
+	}
+	if user.HasLife {
+		lifeFee = calculateFee(user, lifeCoverage)
+		strFee := fmt.Sprintf("%.2f", lifeFee)
+		aMessage = aMessage + "Life Cost: " + strFee + ", "
+		totalFee = totalFee + lifeFee
+
+	}
+	if user.HasLtd {
+		ltdFee = calculateFee(user, ltdCoverage)
+		strFee := fmt.Sprintf("%.2f", ltdFee)
+		aMessage = aMessage + "Ltd Cost: " + strFee + ", "
+		totalFee = totalFee + ltdFee
+	}
+	message.Code = "Success"
+	message.Message = strings.TrimRight(aMessage, ", ")
+	message.Extra = "Total Cost: " + fmt.Sprintf("%.2f", totalFee)
+	duration := time.Since(overallStart)
+	fmt.Println("Start:   ", overallStart.UnixNano())
+	fmt.Printf("elapsed: %v\n", time.Since(overallStart))
+
+	message.ElapsedTime = fmt.Sprintf("%v", duration.String())
+
+	return message
+}
+
+func buildDentalCoverage() Coverage {
+	dentalCoverage := Coverage{}
 	dentalCoverage.AgeHigh = 50
 	dentalCoverage.AgeLow = 20
 
@@ -65,6 +104,12 @@ func ValidateWithCode(user rules.Users) rules.Message {
 	dentalCoverage.LowRisk = -.05
 	dentalCoverage.MedRisk = 0.0
 	dentalCoverage.HighRisk = .1
+
+	return dentalCoverage
+}
+
+func buildLifeCoverage() Coverage {
+	lifeCoverage := Coverage{}
 
 	lifeCoverage.AgeHigh = 50
 	lifeCoverage.AgeLow = 20
@@ -81,6 +126,12 @@ func ValidateWithCode(user rules.Users) rules.Message {
 	lifeCoverage.MedRisk = 0.0
 	lifeCoverage.HighRisk = .1
 
+	return lifeCoverage
+}
+
+func buildLtdCoverage() Coverage {
+	ltdCoverage := Coverage{}
+
 	ltdCoverage.AgeHigh = 50
 	ltdCoverage.AgeLow = 20
 
@@ -96,41 +147,7 @@ func ValidateWithCode(user rules.Users) rules.Message {
 	ltdCoverage.MedRisk = 0.0
 	ltdCoverage.HighRisk = .1
 
-	dentalFee := 0.0
-	lifeFee := 0.0
-	ltdFee := 0.0
-	totalFee := 0.0
-	aMessage := ""
-
-	if user.HasDental {
-		dentalFee = calculateFee(user, dentalCoverage)
-		strFee := fmt.Sprintf("%.2f", dentalFee)
-		aMessage = aMessage + "Dental Cost: " + strFee + " "
-		totalFee = totalFee + dentalFee
-	}
-	if user.HasLife {
-		lifeFee = calculateFee(user, lifeCoverage)
-		strFee := fmt.Sprintf("%.2f", lifeFee)
-		aMessage = aMessage + "Life Cost: " + strFee + " "
-		totalFee = totalFee + lifeFee
-
-	}
-	if user.HasLtd {
-		ltdFee = calculateFee(user, ltdCoverage)
-		strFee := fmt.Sprintf("%.2f", ltdFee)
-		aMessage = aMessage + "Ltd Cost: " + strFee + " "
-		totalFee = totalFee + ltdFee
-	}
-	message.Code = "Success"
-	message.Message = strings.TrimRight(aMessage, " ")
-	message.Extra = "Total Cost: " + fmt.Sprintf("%.2f", totalFee)
-	duration := time.Since(overallStart)
-	fmt.Println("Start:   ", overallStart.UnixNano())
-	fmt.Printf("elapsed: %v\n", time.Since(overallStart))
-
-	message.ElapsedTime = fmt.Sprintf("%v", duration.String())
-
-	return message
+	return ltdCoverage
 }
 
 func elapsed(name string) func() {
