@@ -1,6 +1,9 @@
-package basicengine
+package engines
 
-func validate(user Users) Message {
+
+rules "github.com/slf-aobrien/hackday2023rules"
+
+func Validate(user rules.Users) Message {
 	//insert real rule set here
 	message := Message{}
 	message.Message = "Success"

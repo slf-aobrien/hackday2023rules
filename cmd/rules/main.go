@@ -12,6 +12,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	rules "github.com/slf-aobrien/hackday2023rules"
+	"github.com/slf-aobrien/hackday2023rules/internal/engines"
 )
 
 type Message struct {
@@ -73,7 +74,7 @@ func main() {
 		check(err)
 		fmt.Println("found a user named: " + testUser.FirstName + " " + testUser.LastName)
 
-		validation := basicengine.validate(testUser)
+		validation := engines.Validate(testUser)
 		w.Write(marshall(validation))
 	})
 
