@@ -11,8 +11,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	"github.com/slf-aobrien/hackday2023rules/cmd/rules/internal/engines"
 	rules "github.com/slf-aobrien/hackday2023rules/internal"
+	"github.com/slf-aobrien/hackday2023rules/internal/engines"
 )
 
 func main() {
