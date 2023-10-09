@@ -6,7 +6,7 @@ type Users struct {
 	Birthday  string `json:"birthday"`
 	Gender    string `json:"gender"`
 	OcCode    string `json:"ocCode"`
-	HasDental bool   `json:"HasDental"`
-	HasLife   bool   `json:"HasLife"`
-	HasLtd    bool   `json:"HasLtd"`
+	HasDental bool   `json:"hasDental"`
+	HasLife   bool   `json:"hasLife"`
+	HasLtd    bool   `json:"hasLtd"`
 }
