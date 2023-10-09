@@ -78,7 +78,7 @@ func TestValidateWithFullMemberWithLifeHighRisk(t *testing.T) {
 	msg := ValidateWithCode(testUser)
 	log.Print(msg.Message)
 	if msg.Message != "Life Cost: 12.00" {
-		t.Fatalf("Test Failed wanting %q received %q", "Dental Cost: 7.20", msg.Message)
+		t.Fatalf("Test Failed wanting %q received %q", "Dental  Cost: 7.20", msg.Message)
 	}
 }
 
