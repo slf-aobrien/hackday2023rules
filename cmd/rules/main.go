@@ -11,15 +11,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	rules "github.com/slf-aobrien/hackday2023rules"
-	"github.com/slf-aobrien/hackday2023rules/internal/engines"
+	"github.com/slf-aobrien/hackday2023rules/cmd/rules/internal/engines"
+	rules "github.com/slf-aobrien/hackday2023rules/internal"
 )
-
-type Message struct {
-	Message string      `json:"message"`
-	Code    string      `json:"status"`
-	Extra   interface{} `json:"extra"`
-}
 
 func main() {
 	fmt.Println("Starting the Rules Service")
@@ -74,7 +68,7 @@ func main() {
 		check(err)
 		fmt.Println("found a user named: " + testUser.FirstName + " " + testUser.LastName)
 
-		validation := engines.Validate(testUser)
+		validation := engines.ValidateWithCode(testUser)
 		w.Write(marshall(validation))
 	})
 
@@ -85,7 +79,7 @@ func main() {
 		err := json.NewDecoder(r.Body).Decode(&testUser)
 		check(err)
 		fmt.Println("found a user named: " + testUser.FirstName + " " + testUser.LastName)
-		validation := validateWithGoRule(testUser)
+		validation := engines.ValidateWithGoRule(testUser)
 
 		w.Write(marshall(validation))
 	})
@@ -97,7 +91,7 @@ func main() {
 		err := json.NewDecoder(r.Body).Decode(&testUser)
 		check(err)
 		fmt.Println("found a user named: " + testUser.FirstName + " " + testUser.LastName)
-		validation := validateWithGrule(testUser)
+		validation := engines.ValidateWithGrule(testUser)
 
 		w.Write(marshall(validation))
 	})
@@ -121,24 +115,4 @@ func check(err error) bool {
 		return true
 	}
 	return false
-}
-
-func validateWithGoRule(user rules.Users) Message {
-	//insert real rule set here
-	message := Message{}
-	message.Message = "Success"
-	message.Code = "OK"
-	message.Extra = "No Validation Performed"
-
-	return message
-}
-
-func validateWithGrule(user rules.Users) Message {
-	//insert real rule set here
-	message := Message{}
-	message.Message = "Success"
-	message.Code = "OK"
-	message.Extra = "No Validation Performed"
-
-	return message
 }
