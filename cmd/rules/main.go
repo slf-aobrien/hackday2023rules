@@ -11,17 +11,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	rules "github.com/slf-aobrien/hackday2023rules"
+	"github.com/slf-aobrien/hackday2023rules/internal/engines"
 )
-
-type Users struct {
-	LastName  string `json:"lastName"`
-	FirstName string `json:"firstName"`
-	Birthday  string `json:"birthday"`
-	OcCode    string `json:"ocCode"`
-	HasDental bool   `json:"HasDental"`
-	HasLife   bool   `json:"HasLife"`
-	HasLtd    bool   `json:"HasLtd"`
-}
 
 type Message struct {
 	Message string      `json:"message"`
@@ -61,17 +53,51 @@ func main() {
 		fmt.Println("Returning welcome message")
 		w.Write([]byte("Welcome"))
 	})
-	r.Options("/v1/validate", func(w http.ResponseWriter, r *http.Request) {
+
+	r.Options("/v1/validatewithcode", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("success"))
 	})
-	r.Post("/v1/validate", func(w http.ResponseWriter, r *http.Request) {
+
+	r.Options("/v1/validatewithgorule", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("success"))
+	})
+
+	r.Options("/v1/validatewithgrule", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("success"))
+	})
+
+	r.Post("/v1/validatewithcode", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Validation User")
 
-		var testUser Users
+		var testUser rules.Users
 		err := json.NewDecoder(r.Body).Decode(&testUser)
 		check(err)
 		fmt.Println("found a user named: " + testUser.FirstName + " " + testUser.LastName)
-		validation := validateUser(testUser)
+
+		validation := engines.Validate(testUser)
+		w.Write(marshall(validation))
+	})
+
+	r.Post("/v1/validatewithgorule", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Validation User")
+
+		var testUser rules.Users
+		err := json.NewDecoder(r.Body).Decode(&testUser)
+		check(err)
+		fmt.Println("found a user named: " + testUser.FirstName + " " + testUser.LastName)
+		validation := validateWithGoRule(testUser)
+
+		w.Write(marshall(validation))
+	})
+
+	r.Post("/v1/validatewithgrule", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Validation User")
+
+		var testUser rules.Users
+		err := json.NewDecoder(r.Body).Decode(&testUser)
+		check(err)
+		fmt.Println("found a user named: " + testUser.FirstName + " " + testUser.LastName)
+		validation := validateWithGrule(testUser)
 
 		w.Write(marshall(validation))
 	})
@@ -97,7 +123,17 @@ func check(err error) bool {
 	return false
 }
 
-func validateUser(user Users) Message {
+func validateWithGoRule(user rules.Users) Message {
+	//insert real rule set here
+	message := Message{}
+	message.Message = "Success"
+	message.Code = "OK"
+	message.Extra = "No Validation Performed"
+
+	return message
+}
+
+func validateWithGrule(user rules.Users) Message {
 	//insert real rule set here
 	message := Message{}
 	message.Message = "Success"
