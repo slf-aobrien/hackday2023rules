@@ -14,7 +14,10 @@ import (
 type GoRuleResponse struct {
 	Performance string `json:"performance"`
 	Result      struct {
-		Fee float64 `json:"fee"`
+		Life   float64 `json:"life"`
+		Dental float64 `json:"dental"`
+		Ltd    float64 `json:"ltd"`
+		Total  float64 `json:"total"`
 	} `json:"result"`
 }
 
@@ -26,10 +29,14 @@ type GoRuleContext struct {
 	Member GoRuleMember `json:"member"`
 }
 
+// @todo extend User struct?
 type GoRuleMember struct {
-	Age    int    `json:"age"`
-	Gender string `json:"gender"`
-	OcCode string `json:"ocCode"`
+	Age       int    `json:"age"`
+	Gender    string `json:"gender"`
+	OcCode    string `json:"ocCode"`
+	HasDental bool   `json:"hasDental"`
+	HasLife   bool   `json:"hasLife"`
+	HasLtd    bool   `json:"hasLtd"`
 }
 
 func ValidateWithGoRule(user rules.Users) rules.Message {
@@ -45,27 +52,16 @@ func ValidateWithGoRule(user rules.Users) rules.Message {
 
 	// @todo validate user - copy from basic engine
 	// @todo validate coverages - copy from basic engine
-
-	// Build payload
-
-	// if user.HasDental {
-
-	// }
-
-	// if user.HasLife {
-
-	// }
-
-	// if user.HasLtd {
-
-	// }
-
+	// @todo - calculate age
 	payload := &GoRuleRequest{
 		Context: GoRuleContext{
 			Member: GoRuleMember{
-				Age:    25,
-				Gender: "male",
-				OcCode: user.OcCode,
+				Age:       25,
+				Gender:    user.Gender,
+				OcCode:    user.OcCode,
+				HasLife:   user.HasLife,
+				HasDental: user.HasDental,
+				HasLtd:    user.HasLtd,
 			},
 		},
 	}
@@ -103,14 +99,25 @@ func ValidateWithGoRule(user rules.Users) rules.Message {
 		panic(res.Status)
 	}
 
-	// @todo replace with Message from response
-	strFee := fmt.Sprintf("%.2f", response.Result.Fee)
-	aMessage = aMessage + "Life Cost: " + strFee + ", "
+	if user.HasDental {
+		strFee := fmt.Sprintf("%.2f", response.Result.Dental)
+		aMessage = aMessage + "Dental Cost: " + strFee + ", "
+	}
+
+	if user.HasLife {
+		strFee := fmt.Sprintf("%.2f", response.Result.Life)
+		aMessage = aMessage + "Life Cost: " + strFee + ", "
+	}
+
+	if user.HasLtd {
+		strFee := fmt.Sprintf("%.2f", response.Result.Ltd)
+		aMessage = aMessage + "Ltd Cost: " + strFee + ", "
+	}
 
 	message := rules.Message{}
 	message.Message = strings.TrimRight(aMessage, ", ")
 	message.Code = "OK"
-	message.Extra = "Total Cost: " + fmt.Sprintf("%.2f", response.Result.Fee)
+	message.Extra = "Total Cost: " + fmt.Sprintf("%.2f", response.Result.Total)
 
 	duration := time.Since(overallStart)
 	fmt.Println("Start:   ", overallStart.UnixNano())
