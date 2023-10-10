@@ -5,22 +5,39 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	rules "github.com/slf-aobrien/hackday2023rules/internal"
 )
 
-type Response struct {
+type GoRuleResponse struct {
 	Performance string `json:"performance"`
 	Result      struct {
 		Fee float64 `json:"fee"`
 	} `json:"result"`
 }
 
+type GoRuleRequest struct {
+	Context GoRuleContext `json:"context"`
+}
+
+type GoRuleContext struct {
+	Member GoRuleMember `json:"member"`
+}
+
+type GoRuleMember struct {
+	Age    int    `json:"age"`
+	Gender string `json:"gender"`
+	OcCode string `json:"ocCode"`
+}
+
 func ValidateWithGoRule(user rules.Users) rules.Message {
 	defer duration(track("ValidateWithCode"))
 	defer elapsed("GoRules")()
 	overallStart := time.Now()
+
+	aMessage := ""
 
 	// Hard coding example gorules demo URL and token here for now (better to move into env file)
 	posturl := "https://eu.engine.gorules.io/documents/d1284028-cdf0-43d0-aa92-dcb781a61156/demo/policies/life"
@@ -43,16 +60,21 @@ func ValidateWithGoRule(user rules.Users) rules.Message {
 
 	// }
 
-	// Payload for gorules demo. @todo normalize this to be similar to the internal rules struct
-	body := []byte(`{
-		"context": {
-			"member": {
-				"age": 25,
-				"gender": "male",
-				"risk": "high"
-			}
-		}
-	}`)
+	payload := &GoRuleRequest{
+		Context: GoRuleContext{
+			Member: GoRuleMember{
+				Age:    25,
+				Gender: "male",
+				OcCode: user.OcCode,
+			},
+		},
+	}
+
+	body, err := json.MarshalIndent(payload, "", "  ")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Print(string(body))
 
 	// Create a HTTP post request
 	r, err := http.NewRequest("POST", posturl, bytes.NewBuffer(body))
@@ -71,7 +93,7 @@ func ValidateWithGoRule(user rules.Users) rules.Message {
 
 	defer res.Body.Close()
 
-	response := &Response{}
+	response := &GoRuleResponse{}
 	derr := json.NewDecoder(res.Body).Decode(response)
 	if derr != nil {
 		panic(derr)
@@ -81,8 +103,12 @@ func ValidateWithGoRule(user rules.Users) rules.Message {
 		panic(res.Status)
 	}
 
+	// @todo replace with Message from response
+	strFee := fmt.Sprintf("%.2f", response.Result.Fee)
+	aMessage = aMessage + "Life Cost: " + strFee + ", "
+
 	message := rules.Message{}
-	message.Message = "Success"
+	message.Message = strings.TrimRight(aMessage, ", ")
 	message.Code = "OK"
 	message.Extra = "Total Cost: " + fmt.Sprintf("%.2f", response.Result.Fee)
 
