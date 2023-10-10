@@ -192,7 +192,27 @@ func calculateFee(user rules.Users, coverage Coverage) float64 {
 }
 
 func calculateAge(birthday string) int {
-	return 18
+	birthdate, error := time.Parse("01/02/2006", birthday)
+	if error != nil {
+		fmt.Println(error)
+		return 18
+	}
+
+	today := time.Now()
+	ty, tm, td := today.Date()
+	today = time.Date(ty, tm, td, 0, 0, 0, 0, time.UTC)
+	by, bm, bd := birthdate.Date()
+	birthdate = time.Date(by, bm, bd, 0, 0, 0, 0, time.UTC)
+	if today.Before(birthdate) {
+		return 0
+	}
+	age := ty - by
+	anniversary := birthdate.AddDate(age, 0, 0)
+	if anniversary.After(today) {
+		age--
+	}
+	return age
+
 }
 func validateUserHasCoverages(user rules.Users) bool {
 	if user.HasDental {
