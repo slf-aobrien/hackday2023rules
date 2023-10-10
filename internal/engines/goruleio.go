@@ -11,13 +11,18 @@ import (
 	rules "github.com/slf-aobrien/hackday2023rules/internal"
 )
 
+// This is a connector for a gorules.io decision engine
+// The admin UI and API are hosted in a free tier account, but in theory the standalone self hosted solution should work as well using the components
+// https://github.com/gorules/zen
+// https://github.com/gorules/jdm-editor
+
 type GoRuleResponse struct {
 	Performance string `json:"performance"`
 	Result      struct {
+		Total  float64 `json:"total"`
 		Life   float64 `json:"life"`
 		Dental float64 `json:"dental"`
 		Ltd    float64 `json:"ltd"`
-		Total  float64 `json:"total"`
 	} `json:"result"`
 }
 
@@ -99,19 +104,21 @@ func ValidateWithGoRule(user rules.Users) rules.Message {
 		panic(res.Status)
 	}
 
+	// @todo - for some reason not all of the response values are being parsed correctly, only "life"
+
 	if user.HasDental {
-		strFee := fmt.Sprintf("%.2f", response.Result.Dental)
-		aMessage = aMessage + "Dental Cost: " + strFee + ", "
+		strFee1 := fmt.Sprintf("%.2f", response.Result.Dental)
+		aMessage = aMessage + "Dental Cost: " + strFee1 + ", "
 	}
 
 	if user.HasLife {
-		strFee := fmt.Sprintf("%.2f", response.Result.Life)
-		aMessage = aMessage + "Life Cost: " + strFee + ", "
+		strFee2 := fmt.Sprintf("%.2f", response.Result.Life)
+		aMessage = aMessage + "Life Cost: " + strFee2 + ", "
 	}
 
 	if user.HasLtd {
-		strFee := fmt.Sprintf("%.2f", response.Result.Ltd)
-		aMessage = aMessage + "Ltd Cost: " + strFee + ", "
+		strFee3 := fmt.Sprintf("%.2f", response.Result.Ltd)
+		aMessage = aMessage + "Ltd Cost: " + strFee3 + ", "
 	}
 
 	message := rules.Message{}

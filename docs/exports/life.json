@@ -1,0 +1,275 @@
+{
+  "contentType": "application/vnd.gorules.decision",
+  "edges": [
+    {
+      "id": "988b0738-ead5-4dfa-97f4-2d10b46a0492",
+      "type": "edge",
+      "sourceId": "fc756a22-3db8-4b4b-91da-96557887c78c",
+      "targetId": "c21fe118-80b9-41a1-a7f5-3a4861c4a99a"
+    },
+    {
+      "id": "822d66f0-0787-439a-9cc0-ad524d41725b",
+      "type": "edge",
+      "sourceId": "fc756a22-3db8-4b4b-91da-96557887c78c",
+      "targetId": "bc6f8b56-d0bc-4f67-b3d2-e99c5136d745"
+    },
+    {
+      "id": "7bdb08dd-2e4e-4eee-984c-391f5fbf1223",
+      "type": "edge",
+      "sourceId": "fc756a22-3db8-4b4b-91da-96557887c78c",
+      "targetId": "5496141b-4ac4-4eee-b325-2ac49bb76993"
+    },
+    {
+      "id": "26514984-f7cd-485e-ab61-c445d50f3638",
+      "type": "edge",
+      "sourceId": "0b22b6f8-5a9b-46ab-9804-d58f4a5b908b",
+      "targetId": "e93021b3-7f6f-43a0-b1b8-bba63628e8b5"
+    },
+    {
+      "id": "8fb52058-863c-4ce2-8a26-fa6e774e190e",
+      "type": "edge",
+      "sourceId": "5496141b-4ac4-4eee-b325-2ac49bb76993",
+      "targetId": "0b22b6f8-5a9b-46ab-9804-d58f4a5b908b"
+    },
+    {
+      "id": "2b6886b2-d8b2-4f02-b580-fca36a658b04",
+      "type": "edge",
+      "sourceId": "bc6f8b56-d0bc-4f67-b3d2-e99c5136d745",
+      "targetId": "0b22b6f8-5a9b-46ab-9804-d58f4a5b908b"
+    },
+    {
+      "id": "a14d93e4-dba2-4f6c-8f90-09f4dc71b1a4",
+      "type": "edge",
+      "sourceId": "c21fe118-80b9-41a1-a7f5-3a4861c4a99a",
+      "targetId": "0b22b6f8-5a9b-46ab-9804-d58f4a5b908b"
+    },
+    {
+      "id": "0538fcc8-6e85-4e18-822e-afbd4999cb20",
+      "type": "edge",
+      "sourceId": "fc756a22-3db8-4b4b-91da-96557887c78c",
+      "targetId": "21e7eabb-f661-462b-86e6-f2bc99be388a"
+    },
+    {
+      "id": "092542f6-ce90-4ddb-ad55-b94733f8bc61",
+      "type": "edge",
+      "sourceId": "21e7eabb-f661-462b-86e6-f2bc99be388a",
+      "targetId": "0b22b6f8-5a9b-46ab-9804-d58f4a5b908b"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "fc756a22-3db8-4b4b-91da-96557887c78c",
+      "name": "Request",
+      "type": "inputNode",
+      "position": {
+        "x": 70,
+        "y": 170
+      }
+    },
+    {
+      "id": "c21fe118-80b9-41a1-a7f5-3a4861c4a99a",
+      "name": "age",
+      "type": "decisionTableNode",
+      "content": {
+        "rules": [
+          {
+            "_id": "vmcmAqU7LL",
+            "9gYFVvCEkS": "30",
+            "OMiRwmCLbN": ">50"
+          },
+          {
+            "_id": "Gk19BJQyXt",
+            "9gYFVvCEkS": "17",
+            "OMiRwmCLbN": "[21..49]"
+          },
+          {
+            "_id": "MR3wo_sqs3",
+            "9gYFVvCEkS": "10",
+            "OMiRwmCLbN": "18..20"
+          },
+          {
+            "_id": "PxkN_FrqXi",
+            "9gYFVvCEkS": "0",
+            "OMiRwmCLbN": ""
+          }
+        ],
+        "inputs": [
+          {
+            "id": "OMiRwmCLbN",
+            "name": "age",
+            "type": "expression",
+            "field": "member.age"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "9gYFVvCEkS",
+            "name": "Output",
+            "type": "expression",
+            "field": "agefee"
+          }
+        ],
+        "hitPolicy": "first"
+      },
+      "position": {
+        "x": 320,
+        "y": 30
+      }
+    },
+    {
+      "id": "bc6f8b56-d0bc-4f67-b3d2-e99c5136d745",
+      "name": "gender",
+      "type": "decisionTableNode",
+      "content": {
+        "rules": [
+          {
+            "_id": "9EG9xc8seZ",
+            "L2NbBFaGX0": "\"F\"",
+            "xXGn34kuRk": "-5"
+          },
+          {
+            "_id": "-mzDh2fmS6",
+            "L2NbBFaGX0": "\"M\"",
+            "xXGn34kuRk": "10"
+          },
+          {
+            "_id": "_j4V80x5-7",
+            "L2NbBFaGX0": "",
+            "xXGn34kuRk": "10"
+          }
+        ],
+        "inputs": [
+          {
+            "id": "L2NbBFaGX0",
+            "name": "gender",
+            "type": "expression",
+            "field": "member.gender"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "xXGn34kuRk",
+            "name": "Output",
+            "type": "expression",
+            "field": "genderfee"
+          }
+        ],
+        "hitPolicy": "first"
+      },
+      "position": {
+        "x": 320,
+        "y": 140
+      }
+    },
+    {
+      "id": "5496141b-4ac4-4eee-b325-2ac49bb76993",
+      "name": "occupation risk",
+      "type": "decisionTableNode",
+      "content": {
+        "rules": [
+          {
+            "_id": "-NKoAE622e",
+            "DEOmBPlabx": "\"low risk\"",
+            "Xx2dpb42H_": "-5"
+          },
+          {
+            "_id": "zC00-k_mhq",
+            "DEOmBPlabx": "\"med risk\"",
+            "Xx2dpb42H_": "0"
+          },
+          {
+            "_id": "0e6VrEQu0Z",
+            "DEOmBPlabx": "\"high risk\"",
+            "Xx2dpb42H_": "5"
+          },
+          {
+            "_id": "wQOPVezuMh",
+            "DEOmBPlabx": "",
+            "Xx2dpb42H_": "0"
+          }
+        ],
+        "inputs": [
+          {
+            "id": "DEOmBPlabx",
+            "name": "occupational risk",
+            "type": "expression",
+            "field": "member.ocCode"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "Xx2dpb42H_",
+            "name": "Output",
+            "type": "expression",
+            "field": "occupationfee"
+          }
+        ],
+        "hitPolicy": "first"
+      },
+      "position": {
+        "x": 320,
+        "y": 250
+      }
+    },
+    {
+      "id": "21e7eabb-f661-462b-86e6-f2bc99be388a",
+      "name": "enabled",
+      "type": "decisionTableNode",
+      "content": {
+        "rules": [
+          {
+            "_id": "knQdrDmWXy",
+            "ABZrp_2cBF": "true",
+            "Qq5G_vtZkz": "true"
+          },
+          {
+            "_id": "oWEEdrMVs8",
+            "ABZrp_2cBF": "false",
+            "Qq5G_vtZkz": "false"
+          }
+        ],
+        "inputs": [
+          {
+            "id": "Qq5G_vtZkz",
+            "name": "Input",
+            "type": "expression",
+            "field": "member.hasLife"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "ABZrp_2cBF",
+            "name": "Output",
+            "type": "expression",
+            "field": "hasLife"
+          }
+        ],
+        "hitPolicy": "first"
+      },
+      "position": {
+        "x": 320,
+        "y": -70
+      }
+    },
+    {
+      "id": "0b22b6f8-5a9b-46ab-9804-d58f4a5b908b",
+      "name": "total fee",
+      "type": "functionNode",
+      "content": "/**\n* @param {import('gorules').Input} input\n* @param {{\n*  moment: import('dayjs')\n*  env: Record<string, any>\n* }} helpers\n*/\nconst handler = (input, { moment, env }) => {\n  return input.hasLife ? {\n    life: input?.agefee + input?.genderfee + input?.occupationfee\n  } : {}\n}",
+      "position": {
+        "x": 680,
+        "y": 140
+      }
+    },
+    {
+      "id": "e93021b3-7f6f-43a0-b1b8-bba63628e8b5",
+      "name": "Response",
+      "type": "outputNode",
+      "position": {
+        "x": 930,
+        "y": 140
+      }
+    }
+  ],
+  "meta": null
+}

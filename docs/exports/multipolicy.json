@@ -1,0 +1,90 @@
+{
+  "contentType": "application/vnd.gorules.decision",
+  "edges": [
+    {
+      "id": "39baf900-4eea-4227-9bef-809c062d9ccc",
+      "type": "edge",
+      "sourceId": "32d3d4a6-863e-4869-b9b5-5ea752d9aeb2",
+      "targetId": "6340add9-ea7e-47cc-9309-c80823aa21d2"
+    },
+    {
+      "id": "b3dbe9e7-0349-4a20-83b5-8fe249759fbf",
+      "type": "edge",
+      "sourceId": "6340add9-ea7e-47cc-9309-c80823aa21d2",
+      "targetId": "3f3f87e9-f239-4012-b210-9dd331ff04c1"
+    },
+    {
+      "id": "991c6e76-451e-472e-bf39-91c1e1cd764a",
+      "type": "edge",
+      "sourceId": "3f3f87e9-f239-4012-b210-9dd331ff04c1",
+      "targetId": "c139b120-773c-4cdc-972f-9cfae4f15e78"
+    },
+    {
+      "id": "dd1f78e3-a693-4c01-b107-98352e570a03",
+      "type": "edge",
+      "sourceId": "32d3d4a6-863e-4869-b9b5-5ea752d9aeb2",
+      "targetId": "39d159bd-3db0-4915-8733-8bdf1499fdd0"
+    },
+    {
+      "id": "98ceaf2d-aa84-4c6d-86b9-9e798f8e857b",
+      "type": "edge",
+      "sourceId": "39d159bd-3db0-4915-8733-8bdf1499fdd0",
+      "targetId": "3f3f87e9-f239-4012-b210-9dd331ff04c1"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "32d3d4a6-863e-4869-b9b5-5ea752d9aeb2",
+      "name": "Request",
+      "type": "inputNode",
+      "position": {
+        "x": 10,
+        "y": 200
+      }
+    },
+    {
+      "id": "6340add9-ea7e-47cc-9309-c80823aa21d2",
+      "name": "life",
+      "type": "decisionNode",
+      "content": {
+        "key": "demo/policies/life"
+      },
+      "position": {
+        "x": 290,
+        "y": 200
+      }
+    },
+    {
+      "id": "39d159bd-3db0-4915-8733-8bdf1499fdd0",
+      "name": "dental",
+      "type": "decisionNode",
+      "content": {
+        "key": "demo/policies/dental"
+      },
+      "position": {
+        "x": 290,
+        "y": 60
+      }
+    },
+    {
+      "id": "3f3f87e9-f239-4012-b210-9dd331ff04c1",
+      "name": "combine",
+      "type": "functionNode",
+      "content": "/**\n* @param {import('gorules').Input} input\n* @param {{\n*  moment: import('dayjs')\n*  env: Record<string, any>\n* }} helpers\n*/\nconst handler = (input, { moment, env }) => {\n  let total = 0;\n  if (input.life) {\n    total += Number(input.life);\n  }\n  if (input.dental) {\n    total += Number(input.dental);\n  }\n  if (input.ltd) {\n    total += Number(input.ltd);\n  }\n\n  return {\n    life: input?.life,\n    dental: input?.dental,\n    ltd: input?.ltd,\n    total\n  };\n}",
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    },
+    {
+      "id": "c139b120-773c-4cdc-972f-9cfae4f15e78",
+      "name": "Response",
+      "type": "outputNode",
+      "position": {
+        "x": 920,
+        "y": 200
+      }
+    }
+  ],
+  "meta": null
+}
