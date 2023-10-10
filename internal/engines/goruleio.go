@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	rules "github.com/slf-aobrien/hackday2023rules/internal"
 )
@@ -12,15 +13,37 @@ import (
 type Response struct {
 	Performance string `json:"performance"`
 	Result      struct {
-		Fee int `json:"fee"`
+		Fee float64 `json:"fee"`
 	} `json:"result"`
 }
 
 func ValidateWithGoRule(user rules.Users) rules.Message {
+	defer duration(track("ValidateWithCode"))
+	defer elapsed("GoRules")()
+	overallStart := time.Now()
+
 	// Hard coding example gorules demo URL and token here for now (better to move into env file)
 	posturl := "https://eu.engine.gorules.io/documents/d1284028-cdf0-43d0-aa92-dcb781a61156/demo/policies/life"
 	token := "EXun1yh0xf7upSQOPIIMxsVy"
 
+	// @todo validate user - copy from basic engine
+	// @todo validate coverages - copy from basic engine
+
+	// Build payload
+
+	// if user.HasDental {
+
+	// }
+
+	// if user.HasLife {
+
+	// }
+
+	// if user.HasLtd {
+
+	// }
+
+	// Payload for gorules demo. @todo normalize this to be similar to the internal rules struct
 	body := []byte(`{
 		"context": {
 			"member": {
@@ -58,12 +81,16 @@ func ValidateWithGoRule(user rules.Users) rules.Message {
 		panic(res.Status)
 	}
 
-	fmt.Println(response.Result.Fee)
-
 	message := rules.Message{}
 	message.Message = "Success"
 	message.Code = "OK"
-	message.Extra = "Total Cost: " + fmt.Sprintf("%d", response.Result.Fee)
+	message.Extra = "Total Cost: " + fmt.Sprintf("%.2f", response.Result.Fee)
+
+	duration := time.Since(overallStart)
+	fmt.Println("Start:   ", overallStart.UnixNano())
+	fmt.Printf("elapsed: %v\n", time.Since(overallStart))
+
+	message.ElapsedTime = fmt.Sprintf("local %v, remote %v", duration.String(), response.Performance)
 
 	return message
 }
